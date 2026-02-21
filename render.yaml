@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: vendordiscovery
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    disk:
+      name: sqlite-data
+      mountPath: /app/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: GROQ_API_KEY
+        sync: false # set this manually in the Render dashboard
