@@ -1,6 +1,7 @@
+import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import ShortlistBuilder from "@/components/ShortlistBuilder";
-import { Search, Scale, Rocket, BarChart2 } from "lucide-react";
+import { Search, Scale, Rocket, BarChart2, Loader2 } from "lucide-react";
 
 export default function Home() {
   const steps = [
@@ -75,7 +76,13 @@ export default function Home() {
         {/* Builder */}
         <section style={{ paddingBottom: "var(--space-3xl)" }}>
           <div className="container">
-            <ShortlistBuilder />
+            <Suspense fallback={
+              <div style={{ display: "flex", justifyContent: "center", padding: "var(--space-8)" }}>
+                <Loader2 size={28} color="var(--brand)" style={{ animation: "spin 1s linear infinite" }} />
+              </div>
+            }>
+              <ShortlistBuilder />
+            </Suspense>
           </div>
         </section>
       </main>

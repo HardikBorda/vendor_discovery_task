@@ -52,15 +52,27 @@ const MAX_IN_MEMORY = 20;
 const HISTORY_LIMIT = 5;
 
 // ─── PostgreSQL pool (Optional, only used if DATABASE_URL is set) ────────────
+// We use a local minimal interface so the build doesn't require the `pg` package
+// to be installed. The actual `pg` module is loaded lazily at runtime only when
+// DATABASE_URL is set.
 
-let pool: import("pg").Pool | null = null;
+interface PgPool {
+  query(
+    sql: string,
+    params?: unknown[],
+  ): Promise<{ rows: Record<string, unknown>[] }>;
+}
 
-async function tryGetPool(): Promise<import("pg").Pool | null> {
+let pool: PgPool | null = null;
+
+async function tryGetPool(): Promise<PgPool | null> {
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) return null; // Use SQLite mode
 
   if (!pool) {
-    const { Pool } = await import("pg");
+    // pg is an optional runtime dep — only loaded when DATABASE_URL is set
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-explicit-any
+    const { Pool } = require("pg") as any;
     pool = new Pool({
       connectionString,
       ssl:
@@ -214,14 +226,14 @@ export async function getShortlists(
     [sessionId, HISTORY_LIMIT],
   );
   return rows.map((r) => ({
-    id: r.id,
-    sessionId: r.session_id,
-    need: r.need,
-    requirements: r.requirements,
-    weights: r.weights,
-    excludedVendors: r.excluded_vendors,
-    results: r.results,
-    createdAt: r.created_at,
+    id: r.id as string,
+    sessionId: r.session_id as string,
+    need: r.need as string,
+    requirements: r.requirements as string[],
+    weights: r.weights as Record<string, number>,
+    excludedVendors: r.excluded_vendors as string[],
+    results: r.results as ShortlistResult,
+    createdAt: r.created_at as string,
   }));
 }
 
@@ -261,14 +273,14 @@ export async function getShortlistById(
   if (!rows[0]) return null;
   const r = rows[0];
   return {
-    id: r.id,
-    sessionId: r.session_id,
-    need: r.need,
-    requirements: r.requirements,
-    weights: r.weights,
-    excludedVendors: r.excluded_vendors,
-    results: r.results,
-    createdAt: r.created_at,
+    id: r.id as string,
+    sessionId: r.session_id as string,
+    need: r.need as string,
+    requirements: r.requirements as string[],
+    weights: r.weights as Record<string, number>,
+    excludedVendors: r.excluded_vendors as string[],
+    results: r.results as ShortlistResult,
+    createdAt: r.created_at as string,
   };
 }
 
@@ -296,7 +308,7 @@ export async function getDbMetadata(): Promise<{
   }
 
   const { rows } = await db.query("SELECT COUNT(*) as total FROM shortlists");
-  return { count: parseInt(rows[0].total), sizeMb: 0 }; // Size is harder for PG without more perms
+  return { count: parseInt(rows[0].total as string), sizeMb: 0 };
 }
 
 // ─── checkDbHealth ────────────────────────────────────────────────────────────

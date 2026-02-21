@@ -11,4 +11,5 @@ export {
   getDbMetadata,
 } from "./services/db";
 
-export type { ShortlistRow } from "./services/db";
+// ShortlistRow is defined in the shared types package
+export type { ShortlistRow } from "@/types/shortlist";

@@ -657,8 +657,8 @@ h6 {
    ============================================================ */
 .score-ring {
   position: relative;
-  width: 58px;
-  height: 58px;
+  width: 64px;
+  height: 64px;
   flex-shrink: 0;
 }
 

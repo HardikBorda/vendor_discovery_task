@@ -3,7 +3,6 @@ import {
   Star,
   ThumbsUp,
   BadgeAlert,
-  DollarSign,
   CheckCircle2,
   Globe,
   ChevronUp,
@@ -66,13 +65,19 @@ export const VendorCard = React.memo(
               {scoreBadge}
             </div>
             <div
-              className="flex items-center gap-md flex-wrap"
-              style={{ fontSize: "0.82rem", color: "var(--text-secondary)", marginBottom: 4 }}
+              className="flex flex-wrap"
+              style={{
+                fontSize: "0.82rem",
+                color: "var(--text-secondary)",
+                marginBottom: 5,
+                alignItems: "baseline",
+                gap: "4px 0",
+              }}
             >
-              <span className="flex items-center gap-xs">
-                <DollarSign size={12} strokeWidth={2} />
+              <span style={{ fontWeight: 600 }}>
                 {vendor.priceRange}
               </span>
+              <span style={{ margin: "0 8px", opacity: 0.3 }}>·</span>
               <span className="flex items-center gap-xs">
                 <CheckCircle2
                   size={12}
@@ -81,12 +86,13 @@ export const VendorCard = React.memo(
                 />
                 {matchedCount}/{requirements.length} matched
               </span>
+              <span style={{ margin: "0 8px", opacity: 0.3 }}>·</span>
               <a
                 href={vendor.website}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-xs"
-                style={{ color: "var(--brand)", fontSize: "0.78rem" }}
+                style={{ color: "var(--brand)" }}
               >
                 <Globe size={11} strokeWidth={2} />
                 {vendor.website.replace(/^https?:\/\//, "").split("/")[0]}
