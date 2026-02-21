@@ -2,7 +2,7 @@
 
 > AI-powered vendor shortlist builder — enter a need, set requirements with weights, get a ranked comparison table in seconds.
 
-**Live Demo:** _(add your deployed URL here)_
+**Live Demo:** https://vendor-discovery-task-74q8.vercel.app
 
 ---
 
